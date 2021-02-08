@@ -4,8 +4,10 @@ Making money on the stock market.
 
 ## Install
 
+Development version:
+
 ```
-pip install -e ./moneypot --no-binary :all:
+pip install -e ./moneypot
 ```
 
 ## Configuration
