@@ -1,5 +1,7 @@
-
-from moneypot import *
+"""
+Contains the data handler class.
+"""
+from moneypot.base import Base
 
 
 class DataHandler(Base):

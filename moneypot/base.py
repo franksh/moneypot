@@ -1,5 +1,8 @@
+"""
+Contains base class from which other classes are derived
+"""
 
-from moneypot import *
+import moneypot.utils as utils
 
 class Base():
 
@@ -8,9 +11,9 @@ class Base():
                  ):
 
         if config is None:
-            cfg_path = get_config_path()
+            cfg_path = utils.get_config_path()
             print("no config given, using config at" + cfg_path)
-            config = load_config()
+            config = utils.load_config()
 
         self.config = config
 
