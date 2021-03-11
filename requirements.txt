@@ -7,3 +7,6 @@ pandas>=1.2.1
 matplotlib>=3.0.0
 investpy>=1.0.2
 pandas-datareader>=0.9.0
+mplfinance>=0.12.0
+uvicorn>=0.13.4
+fastapi>=0.63.0
