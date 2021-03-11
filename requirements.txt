@@ -2,11 +2,10 @@ numpy>=1.19
 scipy>=1.5
 jupyter>=1.0.0
 ipywidgets>=7.6.3
-niceplot
 pandas>=1.2.1
 matplotlib>=3.0.0
 investpy>=1.0.2
 pandas-datareader>=0.9.0
-mplfinance>=0.12.0
+mplfinance
 uvicorn>=0.13.4
 fastapi>=0.63.0
