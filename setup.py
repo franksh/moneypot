@@ -20,6 +20,8 @@ class CustomDelevopInstall(develop):
     """
     def run(self):
 
+        develop.run(self)
+
         from moneypot.paths import get_package_configs, get_package_root
         from moneypot.utils import create_configs
 
@@ -37,8 +39,6 @@ class CustomDelevopInstall(develop):
             os.system(f"supervisorctl update")
 
         configure_supervisor()
-
-        develop.run(self)
 
 
 
