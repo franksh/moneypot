@@ -8,31 +8,30 @@ import inspect
 import moneypot
 import shutil
 
-def get_package_root():
-    """
-    Get the path of the package repository.
-    """
-    package_path = Path(inspect.getfile(moneypot))
-    pkg_root = package_path.parents[0]
-    return pkg_root
+from moneypot.paths import get_package_root, get_package_configs
+
+def create_configs():
+    """ Create the default config files """
+    path_configs = get_package_configs()
+    path_configs_templates = get_package_root() / "configs"
+    path_configs.mkdir(mode=0o700, parents=False, exist_ok=True)
+
+    # Configs to always overwrite 
+    for config in ['supervisor.cfg']:
+        shutil.copy2(path_configs_templates / (config + '.example'), path_configs / config )
+
+    # Configs to only write if not exists
+    for config in ['moneypot.cfg']:
+        config_path = path_configs / config
+        if not config_path.exists():
+            shutil.copy2(path_configs_templates / (config + '.example'), path_configs / config )
 
 
-def get_config_path():
-    """ Returns the config path """
-    directory = Path.home() / ".moneypot_config"
-    directory.mkdir(mode=0o700, parents=False, exist_ok=False)
-    cfg_path = directory / "moneypot.cfg"
-    if not cfg_path.exists():
-        shutil.copy2(get_package_root() / "configs" /  "moneypot.cfg", cfg_path)
-    return cfg_path
-
-
-def load_config():
+def load_config(config):
     """ Returns the config """
-    cfgpath = get_config_path()
+    cfgpath = get_package_configs() / config
 
     config = configparser.ConfigParser()
     config.read(cfgpath)
 
     return config
-    # iex_api = dict(config.items('IEX_API'))

@@ -1,15 +1,50 @@
+import setuptools
 from setuptools import setup
 from pathlib import Path
 import os
 import sys
 
+from moneypot.paths import get_package_configs, get_package_root
+from moneypot.utils import create_configs
+
+from setuptools.command.develop import develop
+
 # get __version__, __author__, and __email__
 exec(open(Path(".")/"moneypot"/"metadata.py").read())
-
+        
 with open('requirements.txt','r') as f:
     install_requires = [ s.replace('\n','') for s in f.readlines() ]
 
+class CustomDelevopInstall(develop):
+    """
+    Add some additional steps to setup
+    (configure service, create configs, ...)
+    """
+    def run(self):
+
+        create_configs()
+
+        # Configure supervisor
+        def configure_supervisor():
+            os.system("echo 'configuring supervisor'")
+            path_supervisor_cfg = get_package_configs() / 'supervisor.cfg'
+            # Export path to scripts so it can be used in supervisor cfg
+            path_scripts = get_package_root() / 'scripts'
+            os.environ['PATH_MONEYPOT_SCRIPTS'] = str(path_scripts)
+            os.system(f"supervisord -c {path_supervisor_cfg}")
+            os.system(f"supervisorctl reread") # reread the config file if already running
+            os.system(f"supervisorctl update")
+
+        configure_supervisor()
+
+        develop.run(self)
+
+
+
 setup(name='moneypot',
+      cmdclass={
+          'develop': CustomDelevopInstall
+      },
       version=__version__,
       license=__license__,
       author=__author__,
@@ -34,5 +69,10 @@ setup(name='moneypot',
           'Source': 'https://github.com/franksh/moneypot/',
       },
       include_package_data=True,
+          entry_points = {
+            'console_scripts': [
+                    'moneypot = moneypot.cli:main',
+                ],
+        },
       zip_safe=False,
   )

@@ -19,7 +19,8 @@ pyclean:
 	-rm -rf ./build/
 
 python:
-	pip install -e ${PWD}
+	python setup.py develop -e ${PWD}
+	# pip install -e ${PWD}
 
 checkdocs:
 	python setup.py checkdocs
