@@ -4,8 +4,6 @@ from pathlib import Path
 import os
 import sys
 
-from moneypot.paths import get_package_configs, get_package_root
-from moneypot.utils import create_configs
 
 from setuptools.command.develop import develop
 
@@ -21,6 +19,9 @@ class CustomDelevopInstall(develop):
     (configure service, create configs, ...)
     """
     def run(self):
+
+        from moneypot.paths import get_package_configs, get_package_root
+        from moneypot.utils import create_configs
 
         create_configs()
 

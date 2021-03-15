@@ -19,7 +19,7 @@ pyclean:
 	-rm -rf ./build/
 
 python:
-	python setup.py develop -e ${PWD}
+	python setup.py develop --user
 	# pip install -e ${PWD}
 
 checkdocs:
