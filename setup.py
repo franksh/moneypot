@@ -23,9 +23,10 @@ class CustomDelevopInstall(develop):
         develop.run(self)
 
         from moneypot.paths import get_package_configs, get_package_root
-        from moneypot.utils import create_configs
+        from moneypot.utils import create_configs, create_logs_directory
 
         create_configs()
+        create_logs_directory()
 
         # Configure supervisor
         def configure_supervisor():

@@ -8,7 +8,12 @@ import inspect
 import moneypot
 import shutil
 
-from moneypot.paths import get_package_root, get_package_configs
+from moneypot.paths import get_package_root, get_package_configs, get_package_logs
+
+def create_logs_directory():
+    """ Create directories for logs """
+    path_logs = get_package_logs()
+    path_logs.mkdir(mode=0o700, parents=False, exist_ok=True)
 
 def create_configs():
     """ Create the default config files """

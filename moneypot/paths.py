@@ -31,3 +31,10 @@ def get_package_configs():
     """
     pkg_conf = Path.home() / ".moneypot"
     return pkg_conf
+
+def get_package_logs():
+    """
+    Get the path of the logs directory.
+    """
+    pkg_logs = get_package_root() / "logs"
+    return pkg_logs
