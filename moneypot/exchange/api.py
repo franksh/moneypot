@@ -2,12 +2,13 @@ import uvicorn
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+import moneypot
+
 class Stock(BaseModel):
     symbol: str
     name: str
 
 app = FastAPI()
-
 
 @app.get("/")
 def read_root():
@@ -27,4 +28,5 @@ async def get_stock():
     return True
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = moneypot.config['exchange']['port']
+    uvicorn.run(app, host="0.0.0.0", port=port)

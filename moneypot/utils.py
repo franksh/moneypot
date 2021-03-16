@@ -22,8 +22,8 @@ def create_configs():
     path_configs.mkdir(mode=0o700, parents=False, exist_ok=True)
 
     # Configs to always overwrite 
-    for config in ['supervisor.cfg']:
-        shutil.copy2(path_configs_templates / (config + '.example'), path_configs / config )
+    # for config in ['supervisor.cfg']:
+        # shutil.copy2(path_configs_templates / (config + '.example'), path_configs / config )
 
     # Configs to only write if not exists
     for config in ['moneypot.cfg']:
@@ -32,9 +32,9 @@ def create_configs():
             shutil.copy2(path_configs_templates / (config + '.example'), path_configs / config )
 
 
-def load_config(config):
+def load_config():
     """ Returns the config """
-    cfgpath = get_package_configs() / config
+    cfgpath = get_package_configs() / 'moneypot.cfg'
 
     config = configparser.ConfigParser()
     config.read(cfgpath)

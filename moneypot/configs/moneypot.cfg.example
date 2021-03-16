@@ -1,2 +1,6 @@
 [IEX_API]
 IEX_CLOUD_API_TOKEN = "ABC"
+
+[exchange]
+port = 8000
+

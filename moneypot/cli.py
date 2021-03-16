@@ -2,7 +2,7 @@
 Provides a CLI to the moneypot.scripts module.
 """
 
-import sys
+import sys, os
 from optparse import OptionParser
 import importlib
 import simplejson as json
@@ -73,12 +73,17 @@ def main():
     else:
         kwargs = {}
 
-    for scriptname in args:
-
-        if scriptname in modules:            
-            modules[scriptname].main(**kwargs)
+    if args[0]=='supervisor':
+        if len(args)>1:
+            os.system(f"supervisorctl " + " ".join(args[1:]))
         else:
-            _err("Command '" + scriptname + "' unknown.")
+            _err("Please provide command to supervisor.")
+    else:
+        for scriptname in args:            
+            if scriptname in modules:            
+                modules[scriptname].main(**kwargs)
+            else:
+                _err("Command '" + scriptname + "' unknown.")
 
 def run_script(name,**kwargs):
     """
