@@ -1,7 +1,8 @@
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import inspect
+from starlette.responses import RedirectResponse
 
 import moneypot
 from moneypot.exchange import Session
@@ -18,7 +19,8 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    # return {"Hello": "World"}
+    return RedirectResponse(url='/docs')
 
 
 # @app.post("/stock/", response_model=StockRequest)
@@ -30,6 +32,7 @@ async def create_stock(stock: StockRequest):
 
 @app.get("/stock/")
 async def get_stock():
+    """ Get a list of all stocks """
 
     session = Session()
     stocks = session.query(Stock).all()
@@ -41,9 +44,12 @@ async def get_stock():
 
 @app.get("/stock/{stock_symbol}")
 async def get_stock(stock_symbol: str):
+    """ Get information on a particular stock """
 
     session = Session()
     stock = session.query(Stock).filter_by(symbol=stock_symbol).first()
+    if not stock:
+        raise HTTPException(status_code=404, detail=f"Symbol {stock_symbol} not found")
     # .get({'symbol': stock_symbol})
     # result = await some_library(stock)
     # return result
@@ -51,4 +57,4 @@ async def get_stock(stock_symbol: str):
 
 if __name__ == "__main__":
     port = moneypot.config['exchange']['port']
-    uvicorn.run(app, reload=True, host="0.0.0.0", port=port)
+    uvicorn.run(app, host="0.0.0.0", port=port)

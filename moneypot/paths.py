@@ -38,3 +38,4 @@ def get_package_logs():
     """
     pkg_logs = get_package_root() / "logs"
     return pkg_logs
+
