@@ -45,7 +45,7 @@ moneypot supervisor *command*
 Some useful commands:
 
 - `moneypot supervisor status all/*service*`: List the status of all running services / a particular service.
-- `moneypot supervisor start/stop`: Start or stop a service.
+- `moneypot supervisor start/stop all/*service*`: Start or stop a service.
 
 New services can be registered
 
