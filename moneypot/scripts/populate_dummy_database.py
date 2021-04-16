@@ -20,10 +20,17 @@ def populate_db():
 
 def populate_stocks():
     """ Populate the stocks table """
+
+    # symbol = Column(String, unique=True, index=True, nullable=False)
+    # name = Column(String, nullable=False)
+    # exchange = Column(String, nullable=False)
+    # industry = Column(String)
+    # description = Column(String)
+
     stocks_data = [
-        {'id': 1, 'symbol': 'AAPL', 'name': 'Apple'},
-        {'id': 2, 'symbol': 'TSLA', 'name': 'Tesla'},
-        {'id': 3, 'symbol': 'GME', 'name': 'Gamestop'},
+        {'id': 1, 'symbol': 'AAPL', 'name': 'Apple', 'exchange': '...', 'industry': '...', 'description': '...'},
+        {'id': 2, 'symbol': 'TSLA', 'name': 'Tesla', 'exchange': '...', 'industry': '...', 'description': '...'},
+        {'id': 3, 'symbol': 'GME', 'name': 'Gamestop', 'exchange': '...', 'industry': '...', 'description': '...'},
     ]
     session = Session()
     # Create table 

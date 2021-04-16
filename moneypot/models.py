@@ -1,5 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Numeric, Integer, String, DateTime, UniqueConstraint, PrimaryKeyConstraint, ForeignKeyConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy import event, DDL, DateTime
 
 from moneypot.exchange import Base, engine
 
@@ -8,8 +9,11 @@ class Stock(Base):
     __table_args__ = {'extend_existing': True}
 
     id = Column(Integer, primary_key=True, index=True)
-    symbol = Column(String, unique=True, index=True)
-    name = Column(String)
+    symbol = Column(String, unique=True, index=True, nullable=False)
+    name = Column(String, nullable=False)
+    exchange = Column(String, nullable=False)
+    industry = Column(String)
+    description = Column(String)
     # price = Column(Numeric(10, 2))
     # forward_pe = Column(Numeric(10, 2))
     # forward_eps = Column(Numeric(10, 2))
@@ -21,6 +25,15 @@ class Stock(Base):
         return "<Stock(symbol={}, name={})>".format(
             self.symbol, self.name
         )
+
+    def to_dict(self):
+        """ Returns the object as a dict of its attributes
+        """
+        obj_dict = self.__dict__
+        # Remove an unecessary attribute returned by SQL alchemy
+        obj_dict.pop('_sa_instance_state', None)
+        return obj_dict
+        
 
 
 class Ticker(Base):
@@ -47,7 +60,14 @@ class Ticker(Base):
             self.stock_id
         )
 
-from sqlalchemy import event, DDL, DateTime
+    def to_dict(self):
+        """ Returns the object as a dict of its attributes
+        """
+        obj_dict = self.__dict__
+        # Remove an unecessary attribute returned by SQL alchemy
+        obj_dict.pop('_sa_instance_state', None)
+        return obj_dict
+
 # # Special: Transform table to Timescaledb hypertable
 event.listen(
     Ticker.__table__,
