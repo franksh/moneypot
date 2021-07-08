@@ -5,7 +5,7 @@ from sqlalchemy import inspect
 from starlette.responses import RedirectResponse
 
 import moneypot
-from moneypot.exchange import Session
+from moneypot.database import Session
 from moneypot.models import Stock
 
 # class Stock(BaseModel):

@@ -18,7 +18,7 @@ def get_package_root():
 
 def get_package_scripts():
     """
-    Get the path of the package repository.
+    Get the path of the package scripts folder.
     """
     package_path = get_package_root() / "scripts"
     scripts = list(package_path.glob("*.py"))

@@ -16,3 +16,5 @@ psycopg2>=2.8.6
 streamlit>=0.79.0
 yfinance>=0.1.59
 plotly>=4.14.3
+num2words>=0.5.10
+python-binance>=1.0.12

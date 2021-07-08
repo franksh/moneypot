@@ -35,9 +35,9 @@ class CustomDelevopInstall(develop):
             # Export path to scripts so it can be used in supervisor cfg
             path_scripts = get_package_root() / 'supervisor'
             # os.environ['PATH_MONEYPOT_SCRIPTS'] = str(path_scripts)
-            os.system(f"supervisord -c {path_supervisor_cfg}")
-            os.system(f"supervisorctl reread") # reread the config file if already running
-            os.system(f"supervisorctl update")
+            os.system("supervisord -c {}".format(path_supervisor_cfg))
+            os.system("supervisorctl reread") # reread the config file if already running
+            os.system("supervisorctl update")
 
         configure_supervisor()
 

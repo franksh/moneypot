@@ -1,7 +1,7 @@
 """ Base class for brokers """
 from abc import ABC, abstractmethod
 
-from moneypot.models import Stock, Ticker
+from moneypot.models import Stock, TickerStock, Coin, TickerCoin
 
 class Broker(ABC):
     """ Abstract Base class for all brokers. 
@@ -15,15 +15,34 @@ class Broker(ABC):
     """
     def __init__(self):
         pass
+    
+
+class StockBroker(Broker):
+
+    def __init__(self):
+        pass
 
     @abstractmethod
-    def load_stock(self, symbol: str) -> Stock:
+    def load_stock_from_broker(self, symbol: str) -> Stock:
         """ Return the info on a stock """
         pass
 
     @abstractmethod
-    def load_ticker(self, symbol: str, frequency: str, max_date: str) -> Ticker:
+    def load_ticker_from_broker(self, symbol: str, frequency: str, max_date: str) -> TickerStock:
         """ Return the ticker for a stock """
         pass
 
-    
+class CryptoBroker(Broker):
+
+    def __init__(self):
+        pass
+
+    @abstractmethod
+    def load_coin_from_broker(self, symbol: str) -> Coin:
+        """ Return the info on a crypto """
+        pass
+
+    @abstractmethod
+    def load_ticker_from_broker(self, symbol: str, frequency: str) -> TickerCoin:
+        """ Return the ticker for a crypto """
+        pass

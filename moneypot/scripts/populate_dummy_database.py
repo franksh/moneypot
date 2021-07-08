@@ -1,8 +1,8 @@
 import random
 from datetime import datetime    
 
-from moneypot.models import Stock, Ticker
-from moneypot.exchange import Session, Base, engine
+from moneypot.models import Stock, TickerStock
+from moneypot.database import Session, Base, engine
 
 def rand():
     " Shorthand to get a random number "
@@ -63,10 +63,10 @@ def populate_tickers():
     # Stock.create(engine)
     # Base.metadata.create_all(engine)
     # Ticker.__table__.drop(engine)
-    Ticker.__table__.create(engine)
+    TickerStock.__table__.create(engine)
 
     for ticker_data in tickers_data:
-        ticker = Ticker(**ticker_data)
+        ticker = TickerStock(**ticker_data)
         session.add(ticker)
     # doctor_strange = Stock()  
     # session.add(doctor_strange)  

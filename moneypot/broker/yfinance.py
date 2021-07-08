@@ -3,13 +3,13 @@ import yfinance
 import pandas as pd
 
 import moneypot
-from moneypot.models import Stock, Ticker
-from moneypot.exchange import get_stock_id_by_symbol
+from moneypot.models import Stock, TickerStock
+from moneypot.database import get_stock_id_by_symbol
 
-from .base import Broker
+from .base import StockBroker
 
 
-class YFinanceBroker(Broker):
+class YFinanceBroker(StockBroker):
     """ Broker for the YFinance API
 
     API used is here:
@@ -23,7 +23,7 @@ class YFinanceBroker(Broker):
         }
 
 
-    def load_stock(self, symbol: str) -> Stock:
+    def load_stock_from_broker(self, symbol: str) -> Stock:
         """ Return the info on a stock """
 
         # symbol = 'AAPL'
@@ -44,7 +44,7 @@ class YFinanceBroker(Broker):
 
         res = data['quoteSummary']['result'][0]
 
-        assetProfile_fields = ['industry', '']
+        # assetProfile_fields = ['industry', '']
 
         data = {
             'symbol': res['quoteType']['symbol'],
@@ -57,7 +57,8 @@ class YFinanceBroker(Broker):
         stock = Stock(**data)
         return stock
 
-    def load_ticker(self, symbol: str, frequency: str = '15m', max_date: str = None) -> Ticker:
+    def load_ticker_from_broker(self, symbol: str, frequency: str = '15m',
+                                max_date: str = None) -> TickerStock:
         """ Return the ticker for a stock 
         
         Ranges: m, d, wk, mo
@@ -96,19 +97,23 @@ class YFinanceBroker(Broker):
 
         timestamps = result['timestamp']
         quote = result['indicators']['quote'][0]
-
-        datadf = {'time': timestamps, **quote}
-        dfticker = pd.DataFrame(datadf)
-        dfticker['time'] = pd.to_datetime(dfticker['time'], unit='s')
-        # dfticker.head()
-
         stock_id = get_stock_id_by_symbol(symbol)
 
-        tickers = []
-        for _, tick in dfticker.iterrows():
+        datadf = {'time': timestamps, 'stock_id': stock_id, **quote}
+        # dfticker = pd.DataFrame(datadf)
+        dfticker = TickerStock(datadf)
+        dfticker['time'] = pd.to_datetime(dfticker['time'], unit='s')
+        return dfticker
+        # dfticker.head()
 
-            ticker_data = { **tick, 'stock_id': stock_id }
-            ticker = Ticker(**ticker_data)
-            tickers.append(ticker)
+        # stock_id = get_stock_id_by_symbol(symbol)
+        # dfticker.insert(loc=0, column='symbol', value=symbol)
 
-        return tickers
+        # tickers = []
+        # for _, tick in dfticker.iterrows():
+
+        #     ticker_data = { **tick, 'stock_id': stock_id }
+        #     ticker = TickerStock(**ticker_data)
+        #     tickers.append(ticker)
+
+        # return tickers
