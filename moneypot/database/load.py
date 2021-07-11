@@ -1,6 +1,7 @@
 
 import pandas as pd
 from typing import List
+from datetime import datetime
 
 from moneypot.database import Session
 from moneypot.database import DBStock, DBTickerStock
@@ -64,3 +65,4 @@ def get_ticker_coin(symbol) -> TickerCoin:
     dfticker = pd.read_sql(query, session.connection())
     ticker = TickerCoin(dfticker)
     return ticker
+

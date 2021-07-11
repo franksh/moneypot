@@ -26,7 +26,7 @@ class BinanceBroker(CryptoBroker):
         })
         return coin
 
-    def load_ticker_from_broker(self, symbol: str, frequency: str) -> TickerCoin:
+    def load_ticker_from_broker(self, symbol: str, start_date: str, frequency: str) -> TickerCoin:
         """ Return the ticker for a crypto """
 
         # Parameter is actually i.e. Client.KLINE_INTERVAL_5MINUTE
@@ -38,17 +38,65 @@ class BinanceBroker(CryptoBroker):
         interval = freq_to_interval[frequency]
 
         # Load data
-        candles = self.client.get_klines(symbol=symbol, interval=interval)
+        # candles = self.client.get_klines(symbol=symbol, interval=interval)
+        klines = self.client.get_historical_klines(symbol, 
+                            # Client.KLINE_INTERVAL_1MINUTE,
+                            interval,
+                            start_str=start_date,
+                            limit=1000)
 
         # Process
-        dfticker = self.parse_candles(candles, symbol)
+        dfticker = self.parse_candles(klines, symbol)
         return dfticker
 
 
-    def load_available_cryptos(self) -> list:
-        """ Return a list of all info on a crypto """
+    def load_available_coins(self) -> list:
+        """ Load all available trading pairs on binance  """
         coins = self.client.get_all_tickers()
-        return coins
+        dfcoins = pd.DataFrame(coins)
+        return dfcoins
+
+
+    def get_binance_pairs_by_marketcap(self, base_coin='USDT',
+                                       was_traded_before=None):
+        """ Return all pairs with the base coin on binance by marketcap
+
+        For example for USDT: BTCUSDT, ETHUSDT, etc.
+
+        Parameters:
+        -----------
+         - base_coin: str
+         - was_traded_before: datetime or str
+            The first trading date of the pair has to be before this.
+        """
+        # Get coinmarketcap pairs
+        from moneypot.broker import get_all_coins_by_marketcap_coinmarketcap
+        cmap = get_all_coins_by_marketcap_coinmarketcap()
+        # Add base_pais pairs
+        cmap['base_pair'] = cmap['symbol'].apply(lambda x: "".join([x, base_coin]))
+
+        # Get binance pairs
+        # from moneypot.broker import BinanceBroker
+        # broker = BinanceBroker()
+        binance_coins = self.load_available_coins()
+
+        # List all paris available in binance
+        cmap['is_pair_in_binance'] = cmap.apply(lambda x: x['base_pair'] in 
+                                                binance_coins['symbol'].values,
+                                                axis=1)
+        binance_pairs = cmap.loc[cmap['is_pair_in_binance']]
+        binance_pairs = binance_pairs[['rank', 'base_pair', 'name', 'first_historical_data', 'last_historical_data']].reset_index(drop=True)
+        binance_pairs = binance_pairs.rename(columns={'base_pair': 'symbol',
+                                                      'rank': 'rank_marketcap'})
+        print(" - number of pairs found on binance: ", len(binance_pairs))
+
+        # was_traded_before
+        if was_traded_before:
+            print(f" - filtering pairs by first trading date: {was_traded_before}")
+            binance_pairs = binance_pairs.loc[binance_pairs['first_historical_data']<was_traded_before]
+            print(" - number of pairs after filtering: ", len(binance_pairs))
+
+        return binance_pairs
 
 
     def parse_candles(self, candles, symbol) -> TickerCoin:

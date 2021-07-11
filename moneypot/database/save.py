@@ -45,13 +45,14 @@ def populate_ticker_stocks(symbols, broker):
         # session.bulk_save_objects(tickers)
     session.commit()
 
-def populate_coins(symbols, broker):
+def populate_coins(coins, broker):
 
     print(" - populating coins ")
     session = Session()
     DBCoin.__table__.create(engine)
 
-    # Load data for symbols
+    # Load data for coin
+    symbols = coins['symbol']
     for symbol in symbols:
         print(symbol)
         coin = broker.load_coin_from_broker(symbol)
@@ -59,7 +60,7 @@ def populate_coins(symbols, broker):
         session.add(db_coin)
     session.commit()
 
-def populate_ticker_coins(symbols, broker):
+def populate_ticker_coins(symbols, broker, start_date, frequency='5min'):
     """ Populate the coin tickers for the given symbol
     
     Parameters:
@@ -74,7 +75,7 @@ def populate_ticker_coins(symbols, broker):
 
     for symbol in symbols:
         print(symbol)
-        dfticker = broker.load_ticker_from_broker(symbol, frequency='5min')
+        dfticker = broker.load_ticker_from_broker(symbol, start_date, frequency=frequency)
         dfticker.to_sql(tablename, con=engine, if_exists='append', index=False)
         # session.bulk_save_objects(tickers)
     session.commit()

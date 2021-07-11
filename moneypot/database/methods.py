@@ -2,6 +2,7 @@
 import json
 import pandas as pd
 from urllib import request
+from datetime import datetime
 
 import moneypot
 from moneypot.database import Session
@@ -44,6 +45,13 @@ def get_stock_id_by_symbol(symbol):
 #     stock = session.query(Stock).filter(Stock.symbol==symbol).first()
 #     return stock.id
 
+
+def get_ticker_coin_latest_time(symbol) -> datetime:
+    """ Return the most current timestamp of the coin """
+    session = Session()
+    query = session.query(DBTickerCoin).filter(DBTickerCoin.symbol==symbol).order_by(DBTickerCoin.time.desc()).first()
+    latest_time = query.time
+    return latest_time
 
 
 def _get_url_response(url):
