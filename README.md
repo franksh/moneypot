@@ -1,6 +1,18 @@
-# Moneypot
+# Moneypot 💰🍯
+
+[![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
 
 Making money on the stock market.
+
+Moneypot is intended as an application to develop and deploy trading strategies. It will offer:
+
+- Support for different asset types (stocks, crypto) and exchanges.
+- Connection to data providers to store ticker information.
+- A Streamlit dashboard to display tickers and analyze trading strategies.
+- Backtesting of trading strategies
+- Deployment of trading strategies
+
+Moneypot is currently in development and offers limited functionality (yet).
 
 ## Install
 
@@ -24,13 +36,15 @@ Config files are create at `~/.moneypot`.
 
 Moneypot assumes a running PostgreSQL database with the timescaleDB extension installed.
 
-## Overview
+## Usage (Dev notes)
 
 Moneypot consists of multiple modules and services that can run independently of each other. Services can run in the background and can be managed via supervisor.
 
 - exchange (service): An API to the database
+- monitor (service): A Streamlit dashboard to visualize tickers and trading strategies performance
+- broker (service)(tbd): A service to schedule and deploy trading strategies via connected exchanges/brokers.
 
-## Managing services with supervisor
+### Managing services with supervisor
 
 Moneypot uses a package called `supervisor` to manage services that run in the background.
 
